@@ -4,7 +4,7 @@
 
 通过这个教程，你的app将会打开一个浏览器窗口，来展示包含当前正在运行的 Chromium, Node.js与 Electronweb等版本信息的web界面
 
-## Prerequisites
+## 前置准备
 
 在使用Electron进行开发之前，您需要安装 [Node.js][node-download]。 我们建议您使用最新的LTS版本。
 
@@ -56,9 +56,9 @@ npm init
 $ npm install --save-dev electron
 ```
 
-> 注意：如果您在安装 Electron 时遇到任何问题，请 参见 [高级安装][advanced-installation] 指南。
+> 注意：如果您在安装 Electron 时遇到任何问题，请参见 [高级安装][advanced-installation] 指南。
 
-最后，您希望能够执行 Electron 如下所示，在您的 [`package.json`][package-scripts]配置文件中的`scripts`字段下增加一条`start`命令：
+最后，您希望能够执行 Electron ，在您的 [`package.json`][package-scripts]配置文件中的`scripts`字段下增加一条`start`命令，如下所示：
 
 ```json
 {
@@ -74,7 +74,7 @@ $ npm install --save-dev electron
 npm start
 ```
 
-> 注意：此脚本将告诉 Electron 在您项目根目录运行 此时，您的应用将立即抛出一个错误提示您它无法找到要运行的应用
+> 注意：此脚本将告诉 Electron 在您项目根目录运行。这时，您的应用将立即抛出一个错误提示您它无法找到要运行的应用。
 
 ### 运行主进程
 
@@ -115,10 +115,10 @@ npm start
 
 ### 在窗口中打开您的页面
 
-现在您有了一个页面，将它加载进应用窗口中。 要做到这一点，你需要 两个Electron模块：
+现在您有了一个页面，将它加载进应用窗口中。 要做到这一点，你需要两个Electron模块：
 
 * [`app`][app] 模块，它控制应用程序的事件生命周期。
-* [`BrowserWindow`][browser-window] 模块，它创建和管理应用程序 窗口。
+* [`BrowserWindow`][browser-window] 模块，它创建和管理应用程序窗口。
 
 因为主进程运行着Node.js，您可以在文件头部将他们导入作为[公共JS][commonjs]模块：
 
@@ -149,7 +149,7 @@ app.whenReady().then(() => {
 })
 ```
 
-> 注意：此时，您的电子应用程序应当成功 打开显示您页面的窗口！
+> 注意：此时，您的Electron应用程序成功的打开了一个窗口，来展示您的web页面。
 
 ### 管理窗口的生命周期
 
@@ -161,7 +161,7 @@ app.whenReady().then(() => {
 
 在Windows和Linux上，关闭所有窗口通常会完全退出一个应用程序。
 
-To implement this, listen for the `app` module's [`'window-all-closed'`][window-all-closed] event, and call [`app.quit()`][app-quit] if the user is not on macOS (`darwin`).
+如果用户不是macOS(`darwin`)，通过监听app模块的[`'window-all-closed'`][window-all-closed]事件，然后调用[`app.quit()`][app-quit]，来实现退出应用。
 
 ```js
 app.on('window-all-closed', function () {
@@ -173,7 +173,7 @@ app.on('window-all-closed', function () {
 
 当 Linux 和 Windows 应用在没有窗口打开时退出了，macOS 应用通常即使在没有打开任何窗口的情况下也继续运行，并且在没有窗口可用的情况下激活应用时会打开新的窗口。
 
-To implement this feature, listen for the `app` module's [`activate`][activate] event, and call your existing `createWindow()` method if no browser windows are open.
+为了实现这一特性，监听app模块的[`activate`][activate]事件。如果没有任何浏览器窗口是打开的，则调用`createWindow()`方法。
 
 因为窗口无法在 `ready` 事件前创建，你应当在你的应用初始化后仅监听 `activate` 事件。 通过在您现有的 `whenReady()` 回调中附上您的事件监听器来完成这个操作。
 
@@ -195,9 +195,9 @@ app.whenReady().then(() => {
 
 在主进程通过Node的全局 `process` 对象访问这个信息是微不足道的。 然而，你不能直接在主进程中编辑DOM，因为它无法访问渲染器 `文档` 上下文。 它们存在于完全不同的进程！
 
-> Note: If you need a more in-depth look at Electron processes, see the [Process Model][] document.
+> 请注意: 如果您需要更深入地了解Electron进程，请参阅[进程][进程]文档。
 
-这是将 **预加载** 脚本连接到渲染器时派上用场的地方。 预加载脚本在渲染器进程加载之前加载，并有权访问两个 渲染器全局 (例如 `window` 和 `document`) 和 Node.js 环境。
+这是将 **预加载** 脚本连接到渲染器时派上用场的地方。 预加载脚本在渲染器进程加载之前加载，并有权访问渲染器全局对象 (例如 `window` 和 `document`) 和 Node.js 环境。
 
 创建一个名为 `preload.js` 的新脚本如下：
 
@@ -239,8 +239,8 @@ function createWindow () {
 
 这里使用了两个Node.js概念：
 
-* The [`__dirname`][dirname] string points to the path of the currently executing script (in this case, your project's root folder).
-* The [`path.join`][path-join] API joins multiple path segments together, creating a combined path string that works across all platforms.
+* [`dirname`][dirname]字符串指向当前正在执行脚本的路径 (在本例中，它指向你的项目的根文件夹)。
+* [`path.join`][path-join]API 将多个路径联结在一起，创建一个跨平台的路径字符串。
 
 我们使用一个相对当前正在执行JavaScript文件的路径，这样您的相对路径将在开发模式和打包模式中都将有效。
 
@@ -254,7 +254,7 @@ function createWindow () {
 <script src="./renderer.js"></script>
 ```
 
-The code contained in `renderer.js` can then use the same JavaScript APIs and tooling you use for typical front-end development, such as using [`webpack`][webpack] to bundle and minify your code or [React][react] to manage your user interfaces.
+然后，`renderer.js` 中包含的代码可以使用与典型前端开发相同的 JavaScript API 和工具，例如使用 webpack 来捆绑和缩小您的代码或使用 [React][react] 来管理您的用户界面。
 
 ### 回顾
 
@@ -268,12 +268,12 @@ The code contained in `renderer.js` can then use the same JavaScript APIs and to
 ```js
 // main.js
 
-// Modules to control application life and create native browser window
+// 控制应用生命周期和创建原生浏览器窗口的模组
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 
 function createWindow () {
-  // Create the browser window.
+  // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -282,41 +282,40 @@ function createWindow () {
     }
   })
 
-  // and load the index.html of the app.
+  // 加载 index.html
   mainWindow.loadFile('index.html')
 
-  // Open the DevTools.
+  // 打开开发工具
   // mainWindow.webContents.openDevTools()
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
+// 这段程序将会在 Electron 结束初始化
+// 和创建浏览器窗口的时候调用
 // 部分 API 在 ready 事件触发后才能使用。
 app.whenReady().then(() => {
   createWindow()
 
   app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
+    // 通常在 macOS 上，当点击 dock 中的应用程序图标时，
+    // 如果没有其他打开的窗口，那么程序会重新创建一个窗口。
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+// 除了 macOS 外，当所有窗口都被关闭的时候退出程序。 因此，通常对程序和它们在
+// 任务栏上的图标来说，应当保持活跃状态，直到用户使用 Cmd + Q 退出。
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. 也可以拆分成几个文件，然后用 require 导入。
+// 在这个文件中，你可以包含应用程序剩余的所有部分的代码，
+// 也可以拆分成几个文件，然后用 require 导入。
 ```
 
 ```js
 // preload.js
 
-// All of the Node.js APIs are available in the preload process.
+// 所有Node.js API都可以在预加载过程中使用。
 // 它拥有与Chrome扩展一样的沙盒。
 window.addEventListener('DOMContentLoaded', () => {
   const replaceText = (selector, text) => {
@@ -359,10 +358,8 @@ window.addEventListener('DOMContentLoaded', () => {
 总结我们所做的所有步骤：
 
 *我们启动了一个Node.js程序，并将Electron添加为依赖。
-* We created a `main.js` script that runs our main process, which controls our app
-  and runs in a Node.js environment. 在此脚本中， 我们使用 Electron 的 `app` 和  `BrowserWindow` 模块来创建一个浏览器窗口，在一个单独的进程(渲染器)中显示网页内容。
-
-* 为了访问渲染器中的Node.js的某些功能，我们在 `BrowserWindow` 的构造函数上附加了一个预加载脚本。
+* 我们创建了一个`main.js`脚本来运行我们的主要进程，它控制我们的应用程序并且在 Node.js 环境中运行。 在此脚本中，我们使用 Electron 的 `app` 和 `BrowserWindow` 模块来创建一个浏览器窗口，在一个单独的进程(渲染器)中显示网页内容。
+* 为了在渲染器中访问Node.js的某些功能，我们在 `BrowserWindow` 的构造函数上附加了一个预加载脚本。
 
 ## 打包并分发您的应用程序
 
